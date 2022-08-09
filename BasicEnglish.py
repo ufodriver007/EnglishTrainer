@@ -18,6 +18,8 @@ flipflop = True
 key = ''
 value = ''
 mode = 0
+tables = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png']
+tables_iterator = 0
 
 lbl = Label(window, text="", font=("Arial Bold", 40), pady=80)
 lbl.pack()
@@ -3918,6 +3920,8 @@ def abouta():
     top.wait_window()
 
 def verb():
+    global tables
+    global tables_iterator
     top = Toplevel(window)
 
     top.title("Irregular verbs")
@@ -3928,8 +3932,40 @@ def verb():
     ph_tab = PhotoImage(file='1.png')
     top.iconphoto(False, photo)
 
-    lb = Label(top, text="", image=ph_tab)
-    lb.pack(expand=True, fill=BOTH)
+    # first create the canvas
+    canvas = Canvas(top, height=760, width=450)
+    canvas.pack()
+
+    canvas.delete("all")
+    canvas.create_image(0, 0, anchor='nw', image=ph_tab)
+    canvas.image = ph_tab
+
+
+    def btn_n_clicked():
+        global tables
+        global tables_iterator
+        if tables_iterator < 6:
+            tables_iterator += 1
+            f = PhotoImage(file=tables[tables_iterator])
+            canvas.delete("all")
+            canvas.create_image(0, 0, anchor='nw', image=f)
+            canvas.image = f
+
+    def btn_p_clicked():
+        global tables
+        global tables_iterator
+        if tables_iterator > 0:
+            tables_iterator -= 1
+            f = PhotoImage(file=tables[tables_iterator])
+            canvas.delete("all")
+            canvas.create_image(0, 0, anchor='nw', image=f)
+            canvas.image = f
+
+    btn_n = Button(top, text="След.", font=("Arial", 12), command=btn_n_clicked)
+    btn_n.pack(side=RIGHT)
+
+    btn_p = Button(top, text="Пред.", font=("Arial", 12), command=btn_p_clicked)
+    btn_p.pack(side=LEFT)
 
     top.transient(window)
     # мы передаем поток данному виджету т.е. делаем его модальным
@@ -3938,6 +3974,7 @@ def verb():
     top.focus_set()
     # мы задаем приложению команду, что пока не будет закрыто окно top пользоваться другим окном будет нельзя
     top.wait_window()
+
 
 def tobe():
     top = Toplevel(window)
